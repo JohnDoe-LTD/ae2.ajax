@@ -3,68 +3,64 @@
     let toppings = null;
     let sizes = null;
 
+    const jsonHttpClient = (url, resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          if (xhr.status === 200) {
+            resolve(JSON.parse(xhr.responseText));
+          } else {
+            const { status, statusText } = xhr;
+            reject({ status, statusText });
+          }
+        }
+      };
+
+      xhr.onerror = (reason) => {
+        debugger;
+        reject(reason);
+      };
+      xhr.open("GET", url);
+
+      const getRequest = () => xhr.send(null);
+
+      return {
+        get: getRequest,
+      };
+    };
+
     const getToppings = () => {
       return new Promise((resolve, reject) => {
         if (toppings === null) {
-          toppings = [
-            {
-              code: "T01",
-              name: "Bacon",
-              price: 5,
+          jsonHttpClient(
+            toppingsUrl,
+            (data) => {
+              toppings = data;
+              resolve(data);
             },
-            {
-              code: "T02",
-              name: "Champiñones",
-              price: 3,
-            },
-            {
-              code: "T03",
-              name: "Extra de queso",
-              price: 3,
-            },
-            {
-              code: "T04",
-              name: "Rodajas de tomate",
-              price: 3,
-            },
-            {
-              code: "T05",
-              name: "Rodajas de tomate",
-              price: 3,
-            },
-            {
-              code: "T06",
-              name: "Salsa barbacoa",
-              price: 3,
-            },
-          ];
+            reject
+          ).get();
+        } else {
+          resolve(toppings);
         }
-        setTimeout(() => resolve(toppings), 1000);
       });
     };
 
     const getSizes = () => {
       return new Promise((resolve, reject) => {
         if (sizes === null) {
-          sizes = [
-            {
-              code: "S01",
-              name: "Individual",
-              price: 5,
+          jsonHttpClient(
+            sizesUrl,
+            (data) => {
+              sizes = data;
+              resolve(data);
             },
-            {
-              code: "S02",
-              name: "Mediana",
-              price: 10,
-            },
-            {
-              code: "S03",
-              name: "Familiar",
-              price: 15,
-            },
-          ];
+            reject
+          ).get();
+        } else {
+          resolve(sizes);
         }
-        setTimeout(() => resolve(sizes), 3000);
       });
     };
 
@@ -77,7 +73,9 @@
               sizes: responses[1],
             });
           })
-          .then((reason) => reject(reason));
+          .catch((reason) => {
+            reject(reason);
+          });
       });
     };
 
@@ -211,7 +209,8 @@
       );
     };
 
-    const handlerError = (err) => console.log(err);
+    // TODO: handle error with popup
+    const handlerError = (err) => console.error(err);
 
     return {
       sizes: setSizes,
