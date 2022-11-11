@@ -2,7 +2,7 @@
 
 ## Requerimiento 1
 
-Se pide hacer una aplicación AJAX que gestione una pizzería como la [actividad 1](REQUIREMENTS-AE1.md). Puedes basarte en dicha actividad para reutilizar lo que consideres o para hacerte una idea de lo que tienes que implementar junto a tu compañero. El formulario que tendremos que usar será el mismo que en dicha actividad, consúltala para más información.
+Se pide hacer una aplicación AJAX que gestione una pizzería como la [actividad 1](https://github.com/JohnDoe-LTD/ae1.dom.forms/blob/main/README.md). Puedes basarte en dicha actividad para reutilizar lo que consideres o para hacerte una idea de lo que tienes que implementar junto a tu compañero. El formulario que tendremos que usar será el mismo que en dicha actividad, consúltala para más información.
 
 La idea es simular un entorno de acceso a servidor para traer toda la información que se necesite para cargar la página. La página cargará parte de los datos de manera dinámica, concretamente los tamaños y los ingredientes. Dichos datos estarán en formato JSON, por lo que habrá que tratarlos en el cliente para poder mostrarlos.
 
