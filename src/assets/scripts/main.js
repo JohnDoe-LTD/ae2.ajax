@@ -6,65 +6,32 @@
     const getToppings = () => {
       return new Promise((resolve, reject) => {
         if (toppings === null) {
-          toppings = [
-            {
-              code: "T01",
-              name: "Bacon",
-              price: 5,
-            },
-            {
-              code: "T02",
-              name: "Champiñones",
-              price: 3,
-            },
-            {
-              code: "T03",
-              name: "Extra de queso",
-              price: 3,
-            },
-            {
-              code: "T04",
-              name: "Rodajas de tomate",
-              price: 3,
-            },
-            {
-              code: "T05",
-              name: "Rodajas de tomate",
-              price: 3,
-            },
-            {
-              code: "T06",
-              name: "Salsa barbacoa",
-              price: 3,
-            },
-          ];
+          fetch(toppingsUrl)
+            .then((response) => response.json())
+            .then((data) => {
+              toppings = data;
+              resolve(toppings);
+            })
+            .catch(reject);
+        } else {
+          resolve(toppings);
         }
-        setTimeout(() => resolve(toppings), 1000);
       });
     };
 
     const getSizes = () => {
       return new Promise((resolve, reject) => {
         if (sizes === null) {
-          sizes = [
-            {
-              code: "S01",
-              name: "Individual",
-              price: 5,
-            },
-            {
-              code: "S02",
-              name: "Mediana",
-              price: 10,
-            },
-            {
-              code: "S03",
-              name: "Familiar",
-              price: 15,
-            },
-          ];
+          fetch(sizesUrl)
+            .then((response) => response.json())
+            .then((data) => {
+              sizes = data;
+              resolve(data);
+            })
+            .catch(reject);
+        } else {
+          resolve(sizes);
         }
-        setTimeout(() => resolve(sizes), 3000);
       });
     };
 
