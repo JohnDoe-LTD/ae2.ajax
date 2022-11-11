@@ -2,31 +2,31 @@
   {
     "code": "T01",
     "name": "Bacon",
-    "price": "5"
+    "price": 5
   },
   {
     "code": "T02",
     "name": "Champiñones",
-    "price": "3"
+    "price": 3
   },
   {
     "code": "T03",
     "name": "Extra de queso",
-    "price": "3"
+    "price": 3
   },
   {
     "code": "T04",
     "name": "Rodajas de tomate",
-    "price": "3"
+    "price": 3
   },
   {
     "code": "T05",
     "name": "Rodajas de tomate",
-    "price": "3"
+    "price": 3
   },
   {
     "code": "T06",
     "name": "Salsa barbacoa",
-    "price": "3"
+    "price": 3
   }
 ]

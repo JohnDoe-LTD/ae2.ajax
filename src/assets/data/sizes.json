@@ -2,16 +2,16 @@
   {
     "code": "S01",
     "name": "Individual",
-    "price": "5"
+    "price": 5
   },
   {
     "code": "S02",
     "name": "Mediana",
-    "price": "10"
+    "price": 10
   },
   {
     "code": "S03",
     "name": "Familiar",
-    "price": "15"
+    "price": 15
   }
 ]
