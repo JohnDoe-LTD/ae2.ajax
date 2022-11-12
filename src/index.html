@@ -8,13 +8,19 @@
     <meta name="description" content="Lorem..." />
     <meta name="keyword" content="key1, key2, key3" />
     <link rel="stylesheet" type="text/css" href="/assets/styles/main.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
   </head>
   <body class="page">
-    <header class="page-header">
+  <img src="assets\media\Banner_su.webp" alt="Banner superior">
+    <header class="page-header"> 
+     
       <h1>John Doe's Pizzas</h1>
       <h2>La auténtica pizza Newyorkina</h2>
     </header>
     <main class="page-content">
+      <section>
+        <img src="assets\media\banner_principal.png" alt="Banner Principal">
+      </section>
       <section>
         <header>
           <h3>Los secretos de la nona</h3>
@@ -30,9 +36,19 @@
         </p>
       </section>
       <section>
+        <img src="assets\media\banner2.png" alt="Banner Principal">
+      </section>
+      <section>
         <header>
           <h3>¡Realiza tu pedido!</h3>
         </header>
+        <section class="pc" >
+          <img src="assets\media\Menu_selección.PNG" alt="Banner Menu">
+        </section>
+        <section class="mobile" >
+          <img src="assets\media\Menu_selección_movil.PNG" alt="Banner Menu movil">
+          
+        </section>
         <form id="form" action="#" method="get">
           <fieldset class="form-section">
             <legend>Información de contacto</legend>
@@ -133,10 +149,55 @@
         </form>
       </section>
     </main>
-    <footer class="page-footer">
-      <p>John Doe's Pizzas &copy; 2022</p>
-      <p>Paseo de la Castellana 101, Madrid</p>
-    </footer>
+    
+    <footer class="footer">
+      <div class="container">
+       <div class="row">
+         <div class="footer-col">
+           <h4>John Doe's Pizzas</h4>
+           <ul>
+             <li><a href="#">Sobre nosotros</a></li>
+             <li><a href="#">Nuestros Servicios</a></li>
+             <li><a href="#">Política de privacidad</a></li>
+             <li><a href="#">Restaurantes</a></li>
+           </ul>
+         </div>
+         <div class="footer-col">
+           <h4>Ayuda</h4>
+           <ul>
+             <li><a href="#">FAQ</a></li>
+             <li><a href="#">Envios</a></li>
+             <li><a href="#">Reclamaciones</a></li>
+             <li><a href="#">Estado de pedido</a></li>
+             <li><a href="#">Formas de pago</a></li>
+           </ul>
+         </div>
+         <div class="footer-col">
+           <h4>Alimentación</h4>
+           <ul>
+             <li><a href="#">Pizzas</a></li>
+             <li><a href="#">Entrantes</a></li>
+             <li><a href="#">Bebidas</a></li>
+             <li><a href="#">Postres</a></li>
+           </ul>
+         </div>
+         <div class="footer-col">
+           <h4>Siguenos</h4>
+           <div class="social-links">
+             <a href="#"><i class="fab fa-facebook-f"></i></a>
+             <a href="#"><i class="fab fa-twitter"></i></a>
+             <a href="#"><i class="fab fa-instagram"></i></a>
+             <a href="#"><i class="fab fa-linkedin-in"></i></a>
+           </div>
+         </div>
+       </div>
+      </div>
+   </footer>
+   <footer class="page-footer">
+    <p>John Doe's Pizzas &copy; 2022</p>
+    <p>Paseo de la Castellana 101, Madrid</p>
+  </footer>
+ 
     <script src="/assets/scripts/main.js"></script>
   </body>
 </html>
