@@ -219,7 +219,7 @@ ul {
   padding: 70px 0;
 }
 .footer-col {
-  width: 25%;
+  width: 100%;
   padding: 0 15px;
 }
 .footer-col h4 {
@@ -273,7 +273,14 @@ ul {
   color: #ffffff;
   background-color: #ffffff;
 }
-
+@media (min-width: 0px) {
+  .mobile {
+    display: flex;
+  }
+  .pc {
+    display: none;
+  }
+}
 @media (min-width: 425px) {
   .mobile {
     display: flex;
@@ -285,15 +292,7 @@ ul {
     width: 94%;
   }
   .footer-col {
-    width: 100%;
-  }
-}
-@media (min-width: 0px) {
-  .mobile {
-    display: flex;
-  }
-  .pc {
-    display: none;
+    width: 25%;
   }
 }
 
@@ -313,7 +312,7 @@ ul {
     width: 97%;
   }
   .footer-col {
-    width: 50%;
+    width: 25%;
     margin-bottom: 30px;
   }
 }

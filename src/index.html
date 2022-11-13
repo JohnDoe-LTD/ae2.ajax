@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
   </head>
   <body class="page">
-  <img src="assets\media\Banner_su.webp" alt="Banner superior">
+  <img src="assets/media/Banner_su.webp" alt="Banner superior">
     <header class="page-header"> 
      
       <h1>John Doe's Pizzas</h1>
@@ -19,7 +19,7 @@
     </header>
     <main class="page-content">
       <section>
-        <img src="assets\media\banner_principal.png" alt="Banner Principal">
+        <img src="assets/media/banner_principal.png" alt="Banner Principal">
       </section>
       <section>
         <header>
@@ -36,18 +36,17 @@
         </p>
       </section>
       <section>
-        <img src="assets\media\banner2.png" alt="Banner Principal">
+        <img src="assets/media/banner2.png" alt="Banner Principal">
       </section>
       <section>
         <header>
           <h3>¡Realiza tu pedido!</h3>
         </header>
         <section class="pc" >
-          <img src="assets\media\Menu_selección.PNG" alt="Banner Menu">
+          <img src="assets/media/Menu_selección.PNG" alt="Banner Menu">
         </section>
         <section class="mobile" >
-          <img src="assets\media\Menu_selección_movil.PNG" alt="Banner Menu movil">
-          
+          <img src="assets/media/Menu_selección_movil.PNG" alt="Banner Menu movil">
         </section>
         <form id="form" action="#" method="get">
           <fieldset class="form-section">
@@ -124,12 +123,102 @@
             <legend>Información del pedido</legend>
             <div class="form-group">
               <label class="form-label">Tamaño de la pizza</label>
-              <div id="size" class="radio-group"></div>
+              <div id="size" class="radio-group">
+                <div class="radio-group-item">
+                  <input
+                    type="radio"
+                    value="s"
+                    class="size"
+                    name="size"
+                    id="size_s"
+                    data-price="5"
+                  />
+                  <label for="size_s">Pequeña <small>(+5€)</small></label>
+                </div>
+                <div class="radio-group-item">
+                  <input
+                    type="radio"
+                    value="m"
+                    class="size"
+                    name="size"
+                    id="size_m"
+                    data-price="10"
+                  />
+                  <label for="size_m">Mediana <small>(+10€)</small></label>
+                </div>
+                <div class="radio-group-item">
+                  <input
+                    type="radio"
+                    value="l"
+                    class="size"
+                    name="size"
+                    id="size_l"
+                    data-price="15"
+                  />
+                  <label for="size_l">Grande <small>(+15€)</small></label>
+                </div>
+              </div>
               <p class="help-text">Indique el tamaño de pizza que desea.</p>
             </div>
             <div class="form-group">
               <label class="form-label">Toppings</label>
-              <div id="toppings" class="checkbox-list"></div>
+              <div id="toppings" class="checkbox-list">
+                <div class="checkbox-group-item">
+                  <input
+                    type="checkbox"
+                    class="toppings"
+                    name="bacon"
+                    id="bacon"
+                  />
+                  <label for="bacon">Bacon <small>(+1€)</small></label>
+                </div>
+                <div class="checkbox-group-item">
+                  <input
+                    type="checkbox"
+                    class="toppings"
+                    name="mushrooms"
+                    id="mushrooms"
+                  />
+                  <label for="mushrooms">
+                    Champiñones <small>(+1€)</small>
+                  </label>
+                </div>
+                <div class="checkbox-group-item">
+                  <input
+                    type="checkbox"
+                    class="toppings"
+                    name="cheese"
+                    id="cheese"
+                  />
+                  <label for="cheese">
+                    Extra de queso <small>(+1€)</small>
+                  </label>
+                </div>
+                <div class="checkbox-group-item">
+                  <input
+                    type="checkbox"
+                    class="toppings"
+                    name="tomato"
+                    id="tomato"
+                  />
+                  <label for="tomato">
+                    Tomate en rodajas <small>(+1€)</small>
+                  </label>
+                </div>
+                <div class="checkbox-group-item">
+                  <input
+                    type="checkbox"
+                    class="toppings"
+                    name="onion"
+                    id="onion"
+                  />
+                  <label for="onion">Cebolla <small>(+1€)</small></label>
+                </div>
+                <div class="checkbox-group-item">
+                  <input type="checkbox" class="toppings" name="bbq" id="bbq" />
+                  <label for="bbq">Salsa barbacoa <small>(+1€)</small></label>
+                </div>
+              </div>
               <p class="help-text">Seleccione los topping que desea.</p>
             </div>
           </fieldset>
