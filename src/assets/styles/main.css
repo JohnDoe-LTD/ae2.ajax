@@ -47,7 +47,7 @@ body {
 }
 
 .page-footer {
-  background-color: var(--secondary);
+  background-color: #8a2020;
   padding: 30px 15px;
 }
 
@@ -149,7 +149,10 @@ body {
 .radio-group {
   margin-top: 15px;
 }
-
+img {
+  width: 100%;
+  height: auto;
+}
 .radio-group-item {
   margin: 5px 0px;
   font-size: 1em;
@@ -162,7 +165,9 @@ body {
   flex-flow: row wrap;
   justify-content: space-between;
 }
-
+.mobile {
+  display: none;
+}
 .btn {
   width: 49%;
   padding: 20px 10px;
@@ -192,19 +197,123 @@ body {
   background-color: var(--secondary-inverse);
 }
 
+ul {
+  list-style: none;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+.container {
+  max-width: 1170px;
+  margin: auto;
+}
+
+.footer {
+  background-color: #b12036;
+  padding: 70px 0;
+}
+.footer-col {
+  width: 100%;
+  padding: 0 15px;
+}
+.footer-col h4 {
+  font-size: 18px;
+  color: #ffffff;
+  text-transform: capitalize;
+  margin-bottom: 35px;
+  font-weight: 500;
+  position: relative;
+}
+.footer-col h4::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  background-color: #f9aac4;
+  height: 2px;
+  box-sizing: border-box;
+  width: 50px;
+}
+.footer-col ul li:not(:last-child) {
+  margin-bottom: 10px;
+}
+.footer-col ul li a {
+  font-size: 16px;
+  text-transform: capitalize;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 300;
+  color: #ffffff;
+  display: block;
+  transition: all 0.3s ease;
+}
+.footer-col ul li a:hover {
+  color: #ffffff;
+  padding-left: 8px;
+}
+.footer-col .social-links a {
+  display: inline-block;
+  height: 40px;
+  width: 40px;
+  background-color: rgba(223, 223, 223, 0.2);
+  margin: 0 10px 10px 0;
+  text-align: center;
+  line-height: 40px;
+  border-radius: 50%;
+  color: #ffffff;
+  transition: all 0.5s ease;
+}
+.footer-col .social-links a:hover {
+  color: #ffffff;
+  background-color: #ffffff;
+}
+@media (min-width: 0px) {
+  .mobile {
+    display: flex;
+  }
+  .pc {
+    display: none;
+  }
+}
 @media (min-width: 425px) {
+  .mobile {
+    display: flex;
+  }
+  .pc {
+    display: none;
+  }
   .form-control {
     width: 94%;
+  }
+  .footer-col {
+    width: 25%;
   }
 }
 
 @media (min-width: 768px) {
+  .mobile {
+    display: none;
+  }
+  .pc {
+    display: flex;
+  }
+
   .form-section:first-child > .form-group > .form-control {
     width: 92%;
   }
 
   .form-section:first-child > .form-group:last-child > .form-control {
     width: 97%;
+  }
+  .footer-col {
+    width: 25%;
+    margin-bottom: 30px;
   }
 }
 
