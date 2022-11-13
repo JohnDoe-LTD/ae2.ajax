@@ -1,390 +1,287 @@
-((document) => {
-  const dataServices = ({ toppingsUrl, sizesUrl }) => {
-    let toppings = null;
-    let sizes = null;
+function calcularPrecio(toppings, urlToppings, size, urlSizes) {
+  let precioToppings = 0;
+  let precioSize = 0;
 
-    const jsonHttpClient = (url, resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-
-      xhr.onreadystatechange = () => {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-          if (xhr.status === 200) {
-            resolve(JSON.parse(xhr.responseText));
-          } else {
-            const { status, statusText } = xhr;
-            reject({ status, statusText });
-          }
-        }
-      };
-
-      xhr.onerror = (reason) => {
-        debugger;
-        reject(reason);
-      };
-      xhr.open("GET", url);
-
-      const getRequest = () => xhr.send(null);
-
-      return {
-        get: getRequest,
-      };
-    };
-
-    const getToppings = () => {
-      return new Promise((resolve, reject) => {
-        if (toppings === null) {
-          jsonHttpClient(
-            toppingsUrl,
-            (data) => {
-              toppings = data;
-              resolve(data);
-            },
-            reject
-          ).get();
-        } else {
-          resolve(toppings);
-        }
-      });
-    };
-
-    const getSizes = () => {
-      return new Promise((resolve, reject) => {
-        if (sizes === null) {
-          jsonHttpClient(
-            sizesUrl,
-            (data) => {
-              sizes = data;
-              resolve(data);
-            },
-            reject
-          ).get();
-        } else {
-          resolve(sizes);
-        }
-      });
-    };
-
-    const getAllData = () => {
-      return new Promise((resolve, reject) => {
-        Promise.all([getToppings(), getSizes()])
-          .then((responses) => {
-            resolve({
-              toppings: responses[0],
-              sizes: responses[1],
-            });
-          })
-          .catch((reason) => {
-            reject(reason);
-          });
-      });
-    };
-
-    const getPrice = (size, selectedToppings) => {
-      const shouldBeAdded = (topping, selected) =>
-        selected.filter((x) => x === topping.code).length === 1;
-
-      return new Promise((resolve, reject) => {
-        let price = 0;
-        getAllData()
-          .then(({ toppings, sizes }) => {
-            const filteredSizes = sizes.filter((x) => x.code === size);
-            if (filteredSizes.length === 1) {
-              price += filteredSizes[0].price;
+  const toppingsXhr = new XMLHttpRequest();
+  toppingsXhr.onreadystatechange = function () {
+    if (toppingsXhr.readyState === XMLHttpRequest.DONE) {
+      if (toppingsXhr.status === 200) {
+        precioToppings = 0;
+        const toppingsList = JSON.parse(toppingsXhr.responseText);
+        toppings.forEach(function (selectedTopping) {
+          toppingsList.forEach(function (topping) {
+            if (topping.code === selectedTopping) {
+              precioToppings += topping.price;
             }
-            toppings.forEach((topping) => {
-              if (shouldBeAdded(topping, selectedToppings)) {
-                price += topping.price;
-              }
-            });
-            resolve(price);
-          })
-          .catch(reject);
-      });
-    };
-
-    return {
-      data: getAllData,
-      price: getPrice,
-    };
-  };
-
-  const renderServices = () => {
-    const errorMessage = (message) => {
-      const container = document.createElement("p");
-      container.append(message);
-      container.classList.add("error-message");
-      return container;
-    };
-
-    const errorContainer = (name, message) => {
-      const parent = document.getElementById(name).parentNode;
-      parent.classList.add("has-error");
-      parent.appendChild(errorMessage(message));
-    };
-
-    const drawPrice = (price) =>
-      (document.getElementById("total").innerText = price);
-
-    const drawSize = (size) => {
-      const container = document.createElement("div");
-      container.classList.add("radio-group-item");
-      document.getElementById("size").appendChild(container);
-
-      const input = document.createElement("input");
-      input.type = "radio";
-      input.classList.add("size");
-      input.name = "size";
-      input.id = `size_${size.code}`;
-      input.value = size.code;
-      container.appendChild(input);
-      input.addEventListener("change", () =>
-        document.dispatchEvent(new Event("UpdateAmount"))
-      );
-
-      const label = document.createElement("label");
-      label.htmlFor = `size_${size.code}`;
-      label.append(size.name);
-      container.appendChild(label);
-
-      const price = document.createElement("small");
-      price.append(`(+${size.price}€)`);
-      label.appendChild(price);
-    };
-
-    const drawTopping = (topping) => {
-      const container = document.createElement("div");
-      container.classList.add("checkbox-group-item");
-      document.getElementById("toppings").appendChild(container);
-
-      const input = document.createElement("input");
-      input.type = "checkbox";
-      input.classList.add("toppings");
-      input.name = topping.code;
-      input.id = topping.code;
-      input.addEventListener("change", () =>
-        document.dispatchEvent(new Event("UpdateAmount"))
-      );
-      container.appendChild(input);
-
-      const label = document.createElement("label");
-      label.htmlFor = topping.code;
-      label.append(topping.name);
-      container.appendChild(label);
-
-      const price = document.createElement("small");
-      price.append(`(+${topping.price}€)`);
-      label.appendChild(price);
-    };
-
-    const setSizes = (data) => {
-      const { sizes } = data;
-
-      Array.from(document.getElementsByClassName("size")).forEach((x) =>
-        x.remove()
-      );
-
-      sizes.forEach(drawSize);
-
-      return data;
-    };
-
-    const setToppings = (data) => {
-      const { toppings } = data;
-
-      Array.from(document.getElementsByClassName("toppings")).forEach((x) =>
-        x.remove()
-      );
-
-      toppings.forEach(drawTopping);
-
-      return data;
-    };
-
-    const cleanErrors = () => {
-      Array.from(document.getElementsByClassName("has-error")).forEach((x) =>
-        x.classList.remove("has-error")
-      );
-      Array.from(document.getElementsByClassName("error-message")).forEach(
-        (x) => x.remove()
-      );
-    };
-
-    // TODO: handle error with popup
-    const handlerError = (err) => console.error(err);
-
-    return {
-      sizes: setSizes,
-      toppings: setToppings,
-      error: errorContainer,
-      clean: cleanErrors,
-      price: drawPrice,
-      handlerError: handlerError,
-    };
-  };
-
-  const businessRules = (fields, render) => {
-    let pipelineInstance = null;
-
-    const steps = [
-      () => atLeastOneSelectedItemValidator(fields.toppings, render),
-      () => atLeastOneSelectedItemValidator(fields.size, render),
-      () => notEmptyStringValidator(fields.address, render),
-      () => notEmptyStringValidator(fields.email, render),
-      () => notEmptyStringValidator(fields.phone, render),
-      () => notEmptyStringValidator(fields.name, render),
-      () => cleanValidations(render),
-    ];
-
-    const validationStep = (current, nextStep) => {
-      const isFunction = (candidate) => typeof candidate === "function";
-      const isStep = (candidate) => typeof candidate === "object";
-      const validate = () => {
-        const current = validator();
-
-        if (next !== null) {
-          return next.validate() && current;
-        }
-
-        return current;
-      };
-
-      if (!isFunction(current)) {
-        throw new Error("invalid current validator");
+          });
+        });
+        pintarPrecio(precioSize + precioToppings);
+      } else {
+        console.log(toppingsXhr.status, toppingsXhr.statusText);
       }
+    }
+  };
+  toppingsXhr.onerror = function (reason) {
+    console.log(reason);
+  };
+  toppingsXhr.open("GET", urlToppings);
+  toppingsXhr.send(null);
 
-      const validator = current;
-      const next = isStep(nextStep) ? nextStep : null;
-
-      return {
-        validate: validate,
-      };
-    };
-
-    const cleanValidations = ({ clean }) => {
-      clean();
-
-      return true;
-    };
-
-    const notEmptyStringValidator = ({ name, message }, { error }) => {
-      const value = document.getElementById(name).value;
-      if (value === "" || value === undefined) {
-        error(name, message);
-        return false;
+  const sizeXhr = new XMLHttpRequest();
+  sizeXhr.onreadystatechange = function () {
+    if (sizeXhr.readyState === XMLHttpRequest.DONE) {
+      if (sizeXhr.status === 200) {
+        precioSize = 0;
+        const sizes = JSON.parse(sizeXhr.responseText);
+        sizes.forEach(function (item) {
+          if (item.code === size) {
+            precioSize += item.price;
+          }
+        });
+        pintarPrecio(precioSize + precioToppings);
+      } else {
+        console.log(xhr.status, xhr.statusText);
       }
-      return true;
-    };
+    }
+  };
+  sizeXhr.onerror = function (reason) {
+    console.log(reason);
+  };
+  sizeXhr.open("GET", urlSizes);
+  sizeXhr.send(null);
+}
 
-    const atLeastOneSelectedItemValidator = ({ name, message }, { error }) => {
-      const checkedRadios = Array.from(
-        document.getElementsByClassName(name)
-      ).filter((x) => x.checked);
+function cargarToppings(url) {
+  const xhr = new XMLHttpRequest();
 
-      if (checkedRadios.length === 0) {
-        error(name, message);
-        return false;
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      if (xhr.status === 200) {
+        pintarToppings(JSON.parse(xhr.responseText));
+      } else {
+        console.log(xhr.status, xhr.statusText);
       }
-      return true;
-    };
-
-    const pipeline = () => {
-      if (pipelineInstance === null) {
-        steps.forEach(
-          (step) => (pipelineInstance = validationStep(step, pipelineInstance))
-        );
-      }
-      return pipelineInstance;
-    };
-
-    return {
-      pipeline: pipeline,
-    };
+    }
   };
 
-  const eventsManager = (render, services, rules) => {
-    const onSubmit = (ev) => {
-      const isValid = rules.pipeline().validate();
-      if (!isValid) {
-        ev.preventDefault();
+  xhr.onerror = function (reason) {
+    console.log(reason);
+  };
+
+  xhr.open("GET", url);
+
+  xhr.send(null);
+}
+
+function cargarSizes(url) {
+  const xhr = new XMLHttpRequest();
+
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      if (xhr.status === 200) {
+        pintarSizes(JSON.parse(xhr.responseText));
+      } else {
+        console.log(xhr.status, xhr.statusText);
       }
-
-      document.dispatchEvent(new Event("UpdateAmount"));
-    };
-
-    const updateAmount = () => {
-      render.price("-");
-      const sizes = Array.from(document.getElementsByName("size"))
-        .filter((x) => x.checked)
-        .map((x) => x.value);
-
-      const toppings = Array.from(document.getElementsByClassName("toppings"))
-        .filter((x) => x.checked)
-        .map((x) => x.name);
-
-      const size = sizes.length === 1 ? sizes[0] : "";
-
-      services.price(size, toppings).then(render.price);
-    };
-
-    const onLoad = () => {
-      document.addEventListener("UpdateAmount", updateAmount);
-      document.getElementById("form").addEventListener("submit", onSubmit);
-      document.getElementById("reset-btn").addEventListener("click", onReset);
-      services
-        .data()
-        .then(render.sizes)
-        .then(render.toppings)
-        .catch(render.handlerError);
-    };
-
-    const onReset = () => {
-      render.clean();
-      render.price("-");
-    };
-
-    const initialize = () =>
-      document.addEventListener("DOMContentLoaded", onLoad);
-
-    return {
-      initialize: initialize,
-    };
+    }
   };
 
-  const options = {
-    toppingsUrl: "/assets/data/toppings.json",
-    sizesUrl: "/assets/data/sizes.json",
+  xhr.onerror = function (reason) {
+    console.log(reason);
   };
 
-  const fields = {
-    name: {
-      name: "name",
-      message: "El campo es obligatorio.",
-    },
-    phone: {
-      name: "phone",
-      message: "El campo es obligatorio.",
-    },
-    email: {
-      name: "email",
-      message: "El campo es obligatorio.",
-    },
-    address: {
-      name: "address",
-      message: "El campo es obligatorio.",
-    },
-    size: {
-      name: "size",
-      message: "Debe seleccionar un tamaño de pizza.",
-    },
-    toppings: {
-      name: "toppings",
-      message: "Debe seleccionar al menos un ingrediente.",
-    },
-  };
+  xhr.open("GET", url);
 
-  const render = renderServices();
-  const services = dataServices(options);
-  const rules = businessRules(fields, render);
-  const events = eventsManager(render, services, rules);
-  events.initialize();
-})(document);
+  xhr.send(null);
+}
+
+function pintarSizes(sizes) {
+  const sizeItems = Array.from(document.getElementsByClassName("size"));
+
+  sizeItems.forEach(function (sizeItem) {
+    sizeItem.remove();
+  });
+
+  sizes.forEach(function (size) {
+    const container = document.createElement("div");
+    container.classList.add("radio-group-item");
+    document.getElementById("size").appendChild(container);
+
+    const input = document.createElement("input");
+    input.type = "radio";
+    input.classList.add("size");
+    input.name = "size";
+    input.id = `size_${size.code}`;
+    input.value = size.code;
+    container.appendChild(input);
+
+    const label = document.createElement("label");
+    label.htmlFor = `size_${size.code}`;
+    label.append(size.name);
+    container.appendChild(label);
+
+    const price = document.createElement("small");
+    price.append(`(+${size.price}€)`);
+    label.appendChild(price);
+  });
+}
+
+function pintarToppings(toppings) {
+  // eliminar los toppings actuales
+  const toppingItems = Array.from(document.getElementsByClassName("toppings"));
+  toppingItems.forEach(function (toppingItem) {
+    toppingItem.remove();
+  });
+
+  toppings.forEach(function (topping) {
+    const container = document.createElement("div");
+    container.classList.add("checkbox-group-item");
+    document.getElementById("toppings").appendChild(container);
+
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.classList.add("toppings");
+    input.name = topping.code;
+    input.id = topping.code;
+    container.appendChild(input);
+
+    const label = document.createElement("label");
+    label.htmlFor = topping.code;
+    label.append(topping.name);
+    container.appendChild(label);
+
+    const price = document.createElement("small");
+    price.append(`(+${topping.price}€)`);
+    label.appendChild(price);
+  });
+}
+
+function pintarPrecio(precio) {
+  document.getElementById("total").innerText = precio;
+}
+
+function pintarError(campo, mensaje) {
+  const parent = document.getElementById(campo).parentNode;
+  parent.classList.add("has-error");
+  const container = document.createElement("p");
+  container.append(mensaje);
+  container.classList.add("error-message");
+  parent.appendChild(container);
+}
+
+function limpiarErrores() {
+  const contenedores = Array.from(document.getElementsByClassName("has-error"));
+  contenedores.forEach(function (contenedor) {
+    contenedor.classList.remove("has-error");
+  });
+  const mensajes = Array.from(document.getElementsByClassName("error-message"));
+  mensajes.forEach(function (mensaje) {
+    mensaje.remove();
+  });
+}
+
+function validarFormulario() {
+  limpiarErrores();
+
+  let resultado = true;
+  const mensaje = "El campo es obligatorio.";
+
+  const name = document.getElementById("name").value;
+  if (name === "" || name === undefined) {
+    pintarError("name", mensaje);
+    resultado = false;
+  }
+
+  const email = document.getElementById("email").value;
+  if (email === "" || email === undefined) {
+    pintarError("email", mensaje);
+    resultado = false;
+  }
+
+  const address = document.getElementById("address").value;
+  if (address === "" || address === undefined) {
+    pintarError("address", mensaje);
+    resultado = false;
+  }
+
+  const phone = document.getElementById("phone").value;
+  if (phone === "" || phone === undefined) {
+    pintarError("phone", mensaje);
+    resultado = false;
+  }
+
+  const radioButtons = Array.from(document.getElementsByClassName("size"));
+  let marcados = 0;
+  radioButtons.forEach(function (radio) {
+    if (radio.checked) {
+      marcados++;
+    }
+  });
+
+  if (marcados === 0) {
+    pintarError("size", "Debe seleccionar un tamaño de pizza.");
+    resultado = false;
+  }
+
+  const checkboxList = Array.from(document.getElementsByClassName("toppings"));
+
+  let checked = 0;
+  checkboxList.forEach(function (checkbox) {
+    if (checkbox.checked) {
+      checked++;
+    }
+  });
+
+  if (checked === 0) {
+    pintarError("toppings", "Debe seleccionar al menos un ingrediente.");
+    resultado = false;
+  }
+
+  return resultado;
+}
+
+function reiniciarFormulario() {
+  limpiarErrores();
+  pintarPrecio("-");
+}
+
+function enviarFormulario(ev) {
+  if (!validarFormulario()) {
+    ev.preventDefault();
+  }
+
+  let sizeChecked = "";
+  const sizes = Array.from(document.getElementsByName("size"));
+  sizes.forEach(function (size) {
+    if (size.checked) {
+      sizeChecked = size.value;
+    }
+  });
+
+  let toppingsSeleccted = [];
+  const toppings = Array.from(document.getElementsByClassName("toppings"));
+  toppings.forEach(function (topping) {
+    if (topping.checked) {
+      toppingsSeleccted.push(topping.name);
+    }
+  });
+
+  calcularPrecio(
+    toppingsSeleccted,
+    "/assets/data/toppings.json",
+    sizeChecked,
+    "/assets/data/sizes.json"
+  );
+}
+
+function configurarFormulario() {
+  document.getElementById("form").addEventListener("submit", enviarFormulario);
+  document
+    .getElementById("reset-btn")
+    .addEventListener("click", reiniciarFormulario);
+
+  cargarSizes("/assets/data/sizes.json");
+  cargarToppings("/assets/data/toppings.json");
+}
+
+document.addEventListener("DOMContentLoaded", configurarFormulario);
